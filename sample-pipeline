@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+    tools { 
+        maven 'Maven'  
+    }
+
+    stages {
+        stage('SCM') {
+            steps {
+                echo 'Hello Clone stage'
+                git credentialsId: 'fe543ee1-981a-4f49-a452-48ec7bc8d77e', url: 'https://github.com/polarapu/maven-project1.git'
+                }
+        }
+        stage('Build') {
+            steps {
+                echo 'Hello Build'
+                sh 'mvn clean install'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Hello Deploy'
+deploy adapters: [tomcat9(credentialsId: 'feefcc5b-d27f-4ec4-bb95-fc84bf79372c', path: '', url: 'http://192.168.202.157:8081/')], contextPath: 'devops97.war', war: '**/*.war'
+            }
+        }
+    }
+}
